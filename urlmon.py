@@ -51,6 +51,7 @@ MAX_TIMEOUT = 15000  # ms
 SSL_DAYS = 30
 SSL_DAYS_PANIC = 7
 
+sys.path.append('/opt/alerta/urlmon')
 import settings
 
 LOG = logging.getLogger("alerta.urlmon")
