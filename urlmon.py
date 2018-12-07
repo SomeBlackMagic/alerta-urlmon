@@ -412,7 +412,7 @@ class UrlmonDaemon(object):
                         event='big queue for http checks',
                         value=self.queue.qsize(),
                         severity=severity,
-                        text='URL check queue length is %d', self.queue.qsize(),
+                        text=('URL check queue length is %d', self.queue.qsize()),
                         event_type='serviceAlert',
                     )
                 except Exception as e:
