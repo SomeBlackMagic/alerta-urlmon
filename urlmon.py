@@ -48,8 +48,8 @@ SERVER_THREADS = 20
 SLOW_WARNING_THRESHOLD = 5000  # ms
 SLOW_CRITICAL_THRESHOLD = 10000  # ms
 MAX_TIMEOUT = 15000  # ms
-SSL_DAYS = 30
-SSL_DAYS_PANIC = 7
+SSL_DAYS_WARN = 30
+SSL_DAYS_CRIT = 7
 
 sys.path.append('/opt/alerta/urlmon')
 import settings
@@ -93,6 +93,8 @@ class WorkerThread(threading.Thread):
             rule = check.get('rule', None)
             warn_thold = check.get('warning', SLOW_WARNING_THRESHOLD)
             crit_thold = check.get('critical', SLOW_CRITICAL_THRESHOLD)
+            ssl_warn = check.get('ssl_warning', SSL_DAYS_WARN)
+            ssl_crit = check.get('ssl_critical', SSL_DAYS_CRIT)
             checker_api = check.get('api_endpoint', None)
             checker_apikey = check.get('api_key', None)
             check_ssl = check.get('check_ssl')
@@ -254,10 +256,10 @@ class WorkerThread(threading.Thread):
                 if days_left < datetime.timedelta(days=0):
                     text = 'HTTPS cert for %s expired' % check['resource']
                     severity = 'critical'
-                elif days_left < datetime.timedelta(days=SSL_DAYS) and days_left > datetime.timedelta(days=SSL_DAYS_PANIC):
+                elif days_left < datetime.timedelta(days=ssl_warn) and days_left > datetime.timedelta(days=ssl_crit):
                     text = 'HTTPS cert for %s will expire at %s' % (check['resource'], days_left)
                     severity = 'major'
-                elif days_left <= datetime.timedelta(days=SSL_DAYS_PANIC):
+                elif days_left <= datetime.timedelta(days=ssl_crit):
                     text = 'HTTPS cert for %s will expire at %s' % (check['resource'], days_left)
                     severity = 'critical'
                 else:
