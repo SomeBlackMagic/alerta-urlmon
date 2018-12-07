@@ -174,7 +174,7 @@ class WorkerThread(threading.Thread):
                 if search_string and body:
                     LOG.debug('Searching for %s', search_string)
                     found = False
-                    for line in body.split('\n'):
+                    for line in body.decode('utf_8').split('\n'):
                         m = re.search(search_string, line)
                         if m:
                             found = True
