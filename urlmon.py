@@ -1,20 +1,19 @@
-import platform
-import sys
-import time
-import urllib.request, urllib.error, urllib.parse
+import datetime
 import json
-import threading
+import logging
+import platform
 import queue
 import re
-import logging
-
-import datetime
-import ssl
 import socket
-
-from alertaclient.api import Client
-
+import ssl
+import threading
 from http.server import BaseHTTPRequestHandler as BHRH
+import urllib.request, urllib.error, urllib.parse
+
+
+import sys
+import time
+from alertaclient.api import Client
 
 HTTP_RESPONSES = dict([(k, v[0]) for k, v in list(BHRH.responses.items())])
 
@@ -223,7 +222,7 @@ class WorkerThread(threading.Thread):
             try:
                 local_api.send_alert(
                     resource=resource,
-                    event='HttpContent',
+                    event=event,
                     correlate=correlate,
                     group=group,
                     value=value,
@@ -271,7 +270,7 @@ class WorkerThread(threading.Thread):
                         event='HttpSSLChecker',
                         correlate=correlate,
                         group=group,
-                        value='0',
+                        value='left %s day(s)' % days_left.days,
                         severity=severity,
                         environment=environment,
                         service=service,
@@ -340,7 +339,7 @@ class WorkerThread(threading.Thread):
                     req = urllib.request.Request(url, headers=headers)
                 response = urllib.request.urlopen(req, None, MAX_TIMEOUT)
             except ValueError as e:
-                LOG.error('Request failed: %s', e)
+                LOG.error('Request failed: %s' % e)
             except urllib.error.URLError as e:
                 if hasattr(e, 'reason'):
                     reason = str(e.reason)
@@ -349,7 +348,7 @@ class WorkerThread(threading.Thread):
                     reason = None
                     status = e.code
             except Exception as e:
-                LOG.warning('Unexpected error: %s', e)
+                LOG.warning('Unexpected error: %s' % e)
             else:
                 status = response.getcode()
                 body = response.read()
@@ -415,7 +414,7 @@ class UrlmonDaemon(object):
                         event='big queue for http checks',
                         value=self.queue.qsize(),
                         severity=severity,
-                        text=('URL check queue length is %d', self.queue.qsize()),
+                        text='URL check queue length is %d' % self.queue.qsize(),
                         event_type='serviceAlert',
                     )
                 except Exception as e:
