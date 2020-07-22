@@ -222,7 +222,7 @@ class WorkerThread(threading.Thread):
             try:
                 local_api.send_alert(
                     resource=resource,
-                    event=event,
+                    event='HttpContent',
                     correlate=correlate,
                     group=group,
                     value=value,
