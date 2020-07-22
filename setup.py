@@ -2,7 +2,7 @@
 
 import setuptools
 
-version = '3.3.0'
+version = '3.3.2'
 
 setuptools.setup(
     name="alerta-urlmon",
