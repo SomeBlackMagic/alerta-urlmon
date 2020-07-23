@@ -2,13 +2,13 @@
 
 import setuptools
 
-version = '3.3.2'
+version = '3.3.0-sysadmws'
 
 setuptools.setup(
     name="alerta-urlmon",
     version=version,
     description='Alerta script for URL monitoring',
-    url='https://github.com/alerta/alerta-contrib',
+    url='https://github.com/sysadmws/alerta-urlmon',
     license='MIT',
     author='Nick Satterly',
     author_email='nick.satterly@theguardian.com',

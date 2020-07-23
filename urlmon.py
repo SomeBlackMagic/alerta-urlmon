@@ -39,7 +39,7 @@ _HTTP_ALERTS = [
     'HttpResponseRegexOK'
 ]
 
-__version__ = '3.3.2'
+__version__ = '3.3.0-sysadmws'
 
 LOOP_EVERY = 60  # seconds
 #TARGET_FILE = 'urlmon.targets'  # FIXME -- or settings.py ???
