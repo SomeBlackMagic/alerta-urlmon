@@ -405,7 +405,7 @@ class UrlmonDaemon(object):
                 time.sleep(LOOP_EVERY)
                 LOG.info('URL check queue length is %d', self.queue.qsize())
 
-                if self.queue.qsize() > 500:
+                if self.queue.qsize() > QUEUE_WARN:
                     severity = 'warning'
                 else:
                     severity = 'ok'
