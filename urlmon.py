@@ -52,6 +52,7 @@ import settings
 
 LOOP_EVERY = settings.LOOP_EVERY if settings.LOOP_EVERY or 60
 SERVER_THREADS = settings.SERVER_THREADS if settings.SERVER_THREADS or 20
+QUEUE_WARN = settings.QUEUE_WARN if settings.QUEUE_WARN or 100
 
 LOG = logging.getLogger("alerta.urlmon")
 logging.basicConfig(format="%(asctime)s - %(name)s: %(levelname)s - %(message)s", level=logging.DEBUG)
