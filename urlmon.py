@@ -41,9 +41,6 @@ _HTTP_ALERTS = [
 
 __version__ = '3.3.0-sysadmws'
 
-LOOP_EVERY = 60  # seconds
-#TARGET_FILE = 'urlmon.targets'  # FIXME -- or settings.py ???
-SERVER_THREADS = 20
 SLOW_WARNING_THRESHOLD = 5000  # ms
 SLOW_CRITICAL_THRESHOLD = 10000  # ms
 MAX_TIMEOUT = 15000  # ms
@@ -52,6 +49,9 @@ SSL_DAYS_CRIT = 7
 
 sys.path.append('/opt/alerta/urlmon')
 import settings
+
+LOOP_EVERY = settings.LOOP_EVERY if settings.LOOP_EVERY or 60
+SERVER_THREADS = settings.SERVER_THREADS if settings.SERVER_THREADS or 20
 
 LOG = logging.getLogger("alerta.urlmon")
 logging.basicConfig(format="%(asctime)s - %(name)s: %(levelname)s - %(message)s", level=logging.DEBUG)
