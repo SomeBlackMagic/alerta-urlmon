@@ -2,7 +2,7 @@
 
 import setuptools
 
-version = '3.3.0-sysadmws'
+version = '3.3.0-sysadmws-1'
 
 setuptools.setup(
     name="alerta-urlmon",
