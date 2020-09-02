@@ -50,9 +50,9 @@ SSL_DAYS_CRIT = 7
 sys.path.append('/opt/alerta/urlmon')
 import settings
 
-LOOP_EVERY = settings.LOOP_EVERY if settings.LOOP_EVERY is not None else 60
-SERVER_THREADS = settings.SERVER_THREADS if settings.SERVER_THREADS is not None else 20
-QUEUE_WARN = settings.QUEUE_WARN if settings.QUEUE_WARN is not None else 100
+LOOP_EVERY = settings.LOOP_EVERY if hasattr(settings, 'LOOP_EVERY') else 60
+SERVER_THREADS = settings.SERVER_THREADS if hasattr(settings, 'SERVER_THREADS') else 20
+QUEUE_WARN = settings.QUEUE_WARN if hasattr(settings, 'QUEUE_WARN') else 100
 
 LOG = logging.getLogger("alerta.urlmon")
 logging.basicConfig(format="%(asctime)s - %(name)s: %(levelname)s - %(message)s", level=logging.DEBUG)
