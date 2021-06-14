@@ -1,1 +1,1 @@
-charts_dir: .helm
+charts_dir: .helm/
