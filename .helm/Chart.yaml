@@ -1,0 +1,4 @@
+apiVersion: v1
+description: url monitoring for alerta
+name: alerta-urlmon
+version: 0.1.0
