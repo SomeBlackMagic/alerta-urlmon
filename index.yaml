@@ -1,0 +1,12 @@
+apiVersion: v1
+entries:
+  alerta-urlmon:
+  - apiVersion: v1
+    created: "2021-06-14T14:34:18.217407227Z"
+    description: url monitoring for alerta
+    digest: 112731959f9c98408482615d3d20eb9b692d99aabaf945e9fcc405a92347afce
+    name: alerta-urlmon
+    urls:
+    - https://github.com/SomeBlackMagic/alerta-urlmon/releases/download/alerta-urlmon-0.1.1/alerta-urlmon-0.1.1.tgz
+    version: 0.1.1
+generated: "2021-06-14T14:34:18.217413727Z"
