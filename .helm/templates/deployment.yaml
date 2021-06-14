@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Chart.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: ENDPOINT
+              value: "{{ .Values.enviroment.endpoint }}"
+            - name: API_KEY
+              value: "{{ .Values.enviroment.api_key }}"
+            - name: LOOP_EVERY
+              value: "{{ .Values.enviroment.loop_every }}"
+            - name: SERVER_THREADS
+              value: "{{ .Values.enviroment.server_threads }}"
+            - name: QUEUE_WARN
+              value: "{{ .Values.enviroment.queue_warn }}"
+            - name: SLOW_WARNING_THRESHOLD
+              value: "{{ .Values.enviroment.slow_warning_threshold }}"
+            - name: SLOW_CRITICAL_THRESHOLD
+              value: "{{ .Values.enviroment.slow_critica_threshold }}"
+            - name: MAX_TIMEOUT
+              value: "{{ .Values.enviroment.max_timeout }}"
+            - name: SSL_DAYS_WARN
+              value: "{{ .Values.enviroment.ssl_days_warn }}"
+            - name: SSL_DAYS_CRIT
+              value: "{{ .Values.enviroment.ssl_days_crit }}"
+          volumeMounts:
+          - name: settings-py
+            mountPath: /app/settings.py
+            subPath: settings.py
+      volumes:
+        - name: settings-py
+          configMap:
+            name: {{ .Chart.Name }}
+            optional: false

@@ -1,0 +1,36 @@
+replicaCount: 1
+
+image:
+  repository: someblackmagic/alerta-urlmon
+  tag: latest
+  pullPolicy: Always
+
+settingsPy: |
+  checks = [
+    {
+        "resource": "google.net",
+        "url": "https://google.net/",
+        "environment": "Infra",
+        "service": ["Web"],
+        "check_ssl": True,
+
+        "search": "Google search engine",
+
+        "warning": 10000,
+        "critical": 20000,
+        "count": 2,
+
+    }
+  ]
+
+enviroment:
+  endpoint: ""
+  api_key: ""
+  loop_every: 120
+  server_threads: 50
+  queue_warn: 1000
+  slow_warning_threshold: 10
+  slow_critica_threshold: 10
+  max_timeout: 10
+  ssl_days_warn: 10
+  ssl_days_crit: 10
