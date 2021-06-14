@@ -12,9 +12,10 @@ setuptools.setup(
     license='MIT',
     author='Nick Satterly',
     author_email='nick.satterly@theguardian.com',
-    py_modules=['urlmon'],
+    py_modules=['urlmon', 'urllib'],
     install_requires=[
-        'alerta'
+        'alerta',
+        'requests'
     ],
     include_package_data=True,
     zip_safe=False,

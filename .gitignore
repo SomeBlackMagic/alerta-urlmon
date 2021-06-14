@@ -1,0 +1,7 @@
+alerta_urlmon.egg-info
+build
+dist
+venv
+vars.py
+.idea
+__pycache__

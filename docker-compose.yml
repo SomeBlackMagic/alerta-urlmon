@@ -1,0 +1,7 @@
+version: "3.7"
+
+services:
+  urlmon:
+    image: build-app:latest
+    env_file:
+      - .env

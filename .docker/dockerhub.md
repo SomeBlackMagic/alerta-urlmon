@@ -1,11 +1,3 @@
-URL Monitoring for Alerta
-=========================
-
-Original README with License
-----------------------------
-https://github.com/alerta/alerta-contrib/blob/master/integrations/urlmon/README.md
-
-
 ## Quick Start
 
     sudo docker run -d --restart=unless-stopped -v "$(pwd)/settings.py:/app/settings.py" someblackmagic/alerta-urlmon

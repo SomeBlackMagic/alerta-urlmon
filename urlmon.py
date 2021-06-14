@@ -3,13 +3,16 @@ import json
 import logging
 import platform
 import queue
+import urllib
+import json
 import re
 import socket
 import ssl
 import threading
 from http.server import BaseHTTPRequestHandler as BHRH
-import urllib.request, urllib.error, urllib.parse
-
+from urllib.error import URLError  # pylint: disable=no-name-in-module
+from urllib.parse import urlparse  # pylint: disable=no-name-in-module
+from urllib.request import build_opener, ProxyHandler, HTTPBasicAuthHandler, install_opener, Request, urlopen  # pylint: disable=no-name-in-module
 
 import sys
 import time
@@ -39,20 +42,19 @@ _HTTP_ALERTS = [
     'HttpResponseRegexOK'
 ]
 
-__version__ = '3.3.0-sysadmws-1'
+__version__ = '3.3.0'
 
-SLOW_WARNING_THRESHOLD = 5000  # ms
-SLOW_CRITICAL_THRESHOLD = 10000  # ms
-MAX_TIMEOUT = 15000  # ms
-SSL_DAYS_WARN = 30
-SSL_DAYS_CRIT = 7
-
-sys.path.append('/opt/alerta/urlmon')
+import vars
 import settings
 
-LOOP_EVERY = settings.LOOP_EVERY if hasattr(settings, 'LOOP_EVERY') else 60
-SERVER_THREADS = settings.SERVER_THREADS if hasattr(settings, 'SERVER_THREADS') else 20
-QUEUE_WARN = settings.QUEUE_WARN if hasattr(settings, 'QUEUE_WARN') else 100
+SLOW_WARNING_THRESHOLD = vars.SLOW_WARNING_THRESHOLD # 5000  # ms
+SLOW_CRITICAL_THRESHOLD = vars.SLOW_CRITICAL_THRESHOLD # 10000  # ms
+MAX_TIMEOUT = vars.MAX_TIMEOUT # 15000  # ms
+SSL_DAYS_WARN = vars.SSL_DAYS_WARN # 30
+SSL_DAYS_CRIT = vars.SSL_DAYS_CRIT # 7
+LOOP_EVERY = vars.LOOP_EVERY if hasattr(vars, 'LOOP_EVERY') else 60
+SERVER_THREADS = vars.SERVER_THREADS if hasattr(vars, 'SERVER_THREADS') else 20
+QUEUE_WARN = vars.QUEUE_WARN if hasattr(vars, 'QUEUE_WARN') else 100
 
 LOG = logging.getLogger("alerta.urlmon")
 logging.basicConfig(format="%(asctime)s - %(name)s: %(levelname)s - %(message)s", level=logging.DEBUG)
@@ -93,8 +95,6 @@ class WorkerThread(threading.Thread):
             rule = check.get('rule', None)
             warn_thold = check.get('warning', SLOW_WARNING_THRESHOLD)
             crit_thold = check.get('critical', SLOW_CRITICAL_THRESHOLD)
-            ssl_warn = check.get('ssl_warning', SSL_DAYS_WARN)
-            ssl_crit = check.get('ssl_critical', SSL_DAYS_CRIT)
             checker_api = check.get('api_endpoint', None)
             checker_apikey = check.get('api_key', None)
             check_ssl = check.get('check_ssl')
@@ -223,7 +223,7 @@ class WorkerThread(threading.Thread):
             try:
                 local_api.send_alert(
                     resource=resource,
-                    event='HttpContent',
+                    event=event,
                     correlate=correlate,
                     group=group,
                     value=value,
@@ -256,10 +256,10 @@ class WorkerThread(threading.Thread):
                 if days_left < datetime.timedelta(days=0):
                     text = 'HTTPS cert for %s expired' % check['resource']
                     severity = 'critical'
-                elif days_left < datetime.timedelta(days=ssl_warn) and days_left > datetime.timedelta(days=ssl_crit):
+                elif days_left < datetime.timedelta(days=SSL_DAYS_WARN) and days_left > datetime.timedelta(days=SSL_DAYS_CRIT):
                     text = 'HTTPS cert for %s will expire at %s' % (check['resource'], days_left)
                     severity = 'major'
-                elif days_left <= datetime.timedelta(days=ssl_crit):
+                elif days_left <= datetime.timedelta(days=SSL_DAYS_CRIT):
                     text = 'HTTPS cert for %s will expire at %s' % (check['resource'], days_left)
                     severity = 'critical'
                 else:
@@ -377,7 +377,7 @@ class UrlmonDaemon(object):
         self.running = True
 
         self.queue = queue.Queue()
-        self.api = Client(endpoint=settings.ENDPOINT, key=settings.API_KEY)
+        self.api = Client(endpoint=vars.ENDPOINT, key=vars.API_KEY)
 
         # Start worker threads
         LOG.debug('Starting %s worker threads...', SERVER_THREADS)
@@ -447,4 +447,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
